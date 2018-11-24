@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import logo from './assets/images/other-color.svg';
+import celebration from './assets/images/celebration.svg';
+import user from './assets/images/user.svg';
 import './styles/Bootstrap.css';
 import './styles/App.css';
+import Harnimated from './components/Animated';
 import html2canvas from 'html2canvas';
 import { FormValidation } from "calidation";
 
@@ -11,10 +13,16 @@ class App extends Component {
     this.state = {
       uploading: false,
       image: null,
-      changeSecond: false
+      changeSecond: false,
+      member: null,
+      loadTicket: false,
+      loadingTicket: false,
+      canvasUrl: null,
     }
     this.handlePhoto = this.handlePhoto.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.showTicket = this.showTicket.bind(this);
+    this.createImage = this.createImage.bind(this);
   }
 
 
@@ -38,9 +46,9 @@ class App extends Component {
     reader.readAsDataURL(file);
 
     setTimeout(() => {
-        // html2canvas(document.querySelector("#capture")).then(canvas => {
-        //     document.querySelector("#download").attr("href", canvas.toDataURL('image/png',0.9));
-        // });
+        html2canvas(document.querySelector("#capture")).then(canvas => {
+         this.setState({ canvasUrl: canvas.toDataURL('image.png',1)})
+        });
     },500)
     
   }
@@ -49,11 +57,26 @@ class App extends Component {
     if(isValid) {
       console.log(fields);
       this.setState({
-        changeSecond: true
-      })
+        changeSecond: true,
+        member: {
+          name: fields.fullname,
+          job: fields.jobdesc
+        }
+      });
+      this.showTicket();
     }else {
       console.log(errors);
     }
+  }
+
+  showTicket() {
+    this.setState({
+      loadTicket: true,
+      loadingTicket: true,
+    });
+    setTimeout(() => {
+      
+    }, 3000);
   }
 
 
@@ -74,7 +97,7 @@ class App extends Component {
         <div className="wrapper">
           <div className="width-50 faded">
             <h1 className="text-center">RCCG THRONE OF GRACE</h1>
-            <h3 style={{ color: '#d2b06f'}} className="text-center">Taking Over Generation</h3>
+            <h3 style={{ color: '#f99f8d'}} className="text-center">Taking Over Generation</h3>
             <div className="row justify-content-center">
               <div className="col-md-9" style={{ }}>
               
@@ -117,22 +140,53 @@ class App extends Component {
               </div>
             </div>
           </div>
-          <div className="width-50 extra-padding text-center">
-            {this.state.changeSecond &&
+          
+          <div className="width-50 extra-padding text-center" id="capture">
             
+            {this.state.changeSecond &&
               <React.Fragment>
                 <div className="row justify-content-center">
                   <div className="col-md-10">
-                    <div className="">
-                    </div>
+                  <div className="ticket justify-content-center">
+                    <h1 style={{ padding: '0.5rem 0 0 0', color: '#fafafa' }}>RCCG Throne of Grace</h1>
+                    <h4 style={{ color: '#91DC5A'}}>(Area 35 LP 44)</h4>
+                    <h3>I am a Member</h3>
+                    <center>
+                      <div class="ticket-img text-center">
+                        <img src={this.state.image} width={150} className="img-fluid" />
+                      </div>
+
+                    {/* {this.state.member.name ? this.state.member.name : 'Unknown Nameissolong'}<br />
+                    {this.state.member.job} */}
+                    </center>
+                    <h2>{this.state.member.name}</h2>
+                    <h3 style={{ color: '#f99f8d' }}>
+                    {this.state.member.job}
+                    </h3>
+
+                    <p style={{ marginTop: '2em'}}>
+                      <b>Watch-Out for new TOG New Address: </b>
+                    </p>
+                    <p>
+                    <span style={{ color: '#91dc5a' }}>
+                      No 00, Nnobi Street, Kilo Bus-Stop, Surulere, Lagos
+                    </span>
+                    </p>
+                    <p>
+  
+                    <span style={{ color: '#f99f8d'}}>#TakeOverGeneration</span>
+                  </p>
                   </div>
+                  <div class="addthis_inline_share_toolbox"></div>
+                </div>
+                <a class="btn btn-block btn-secondary" id="download" href={this.state.canvasUrl}>Save Image</a>
                 </div>
               </React.Fragment>
             
             }
             {!this.state.changeSecond &&
               <React.Fragment>
-              <img src={logo} className="img-fluid" />
+              <img src={celebration} className="img-fluid" />
               <div className="py-4">
                 <h2 style={{ color: '#473A43', fontSize: '2em'}}>RCCG</h2>
                 <h2 style={{ color: '#473A43',}}>Throne of Grace Inauguration</h2>
